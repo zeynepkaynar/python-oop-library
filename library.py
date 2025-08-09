@@ -1,3 +1,4 @@
+from pydantic import BaseModel, Field
 import json
 
 # Represents a book in the library
@@ -12,12 +13,6 @@ class Book:
     def __str__(self):
         return f"'{self.title}' by {self.author} (ISBN: {self.isbn}, Publication year: {self.publication_year})"
     
-    def to_dict(self):
-        """Returns a dictionary representation of the book."""
-        return self.__dict__
-
-"""book = Book("1984", "George Orwell", "9780451524935", 1949)
-print(book) """
 
 
 class EBook(Book):
@@ -38,13 +33,15 @@ class AudioBook(Book):
 
     def __str__(self):
         return f"{super().__str__()} [Duration: {self.duration_min} mins]"
- 
 
-ebook = EBook("1984", "George Orwell", "978-0451524935", 1986, "EPUB")
-audio_book = AudioBook("Becoming", "Michelle Obama", "978-1524763138", 1999, 780)
 
-print(ebook)
-print(audio_book)
+# Pydantic Model
+class BookModel(BaseModel):
+    title: str
+    author: str 
+    isbn: str = Field(..., min_length=10, max_length=13)
+    publication_year: int = Field(..., gt=1400)
+    book_type: str = Field(default="Book")
 
 
 class Library:
