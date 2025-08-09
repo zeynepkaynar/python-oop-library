@@ -1,0 +1,25 @@
+[
+    {
+        "title": "1984",
+        "author": "Orwell",
+        "isbn": "234",
+        "publication_year": 1990,
+        "book_type": "Book"
+    },
+    {
+        "title": "My ebook",
+        "author": "ME",
+        "isbn": "452",
+        "publication_year": 2011,
+        "book_type": "EBook",
+        "file_format": "PDF"
+    },
+    {
+        "title": "My audio book",
+        "author": "myself",
+        "isbn": "543",
+        "publication_year": 2012,
+        "book_type": "AudioBook",
+        "duration_min": 400
+    }
+]
