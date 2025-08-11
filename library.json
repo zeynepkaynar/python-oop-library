@@ -21,5 +21,35 @@
         "publication_year": 2012,
         "book_type": "AudioBook",
         "duration_min": 400
+    },
+    {
+        "title": "alş",
+        "author": "veli",
+        "isbn": "123",
+        "publication_year": 1990,
+        "book_type": "Book"
+    },
+    {
+        "title": "zenfa",
+        "author": "veli",
+        "isbn": "321",
+        "publication_year": 1990,
+        "book_type": "Book"
+    },
+    {
+        "title": "ali",
+        "author": "zeynep kaynar",
+        "isbn": "12324",
+        "publication_year": 1888,
+        "book_type": "EBook",
+        "file_format": "PDF"
+    },
+    {
+        "title": "awr",
+        "author": "burak",
+        "isbn": "987",
+        "publication_year": 2024,
+        "book_type": "AudioBook",
+        "duration_min": 100
     }
 ]
