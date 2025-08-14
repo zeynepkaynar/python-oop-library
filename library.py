@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+import httpx
 import json
 
 # Represents a book in the library
@@ -55,7 +56,107 @@ class Library:
         self._books = [] # _ means encapsulation 
         self.load_books() # Books are loaded when the library is initialized
 
+
+    def fetch_book_from_api(self, isbn: str):
+        # Fetch book information from Open Library search.json API using ISBN
+
+        OPEN_LIBRARY_URL = "https://openlibrary.org/search.json"
+        try:
+            # Clean isbn from spaces and hyphens
+            clean_isbn = isbn.replace('-', '').replace(' ', '')
+            response = httpx.get(OPEN_LIBRARY_URL, params={"isbn": clean_isbn}, timeout=10.0)
+            response.raise_for_status()
+            data = response.json()
+
+            # If no book data is returned, return None
+            if not data.get("docs"):
+                return None
+            
+            book_info = data["docs"][0]
+            # Get related information or use default values
+            title = book_info.get("title", "Unknown Title")
+            author_names = book_info.get("author_name", [])
+            author = ", ".join(author_names) if author_names else "Unknown Author" 
+            publication_year = book_info.get("first_publish_year", None)
+
+            # Return the book information as a dictionary
+            return {
+                "title": title,
+                "author": author,
+                "isbn": clean_isbn,
+                "publication_year": publication_year
+            }
+
+        # Error handling
+        except httpx.RequestError as e:
+            print(f"Network error: {e}")
+            return None
+        except httpx.HTTPStatusError as e:
+            print(f"HTTP error: {e}")
+            return None
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return None
+
+    def add_book_by_isbn(self, isbn: str, book_type: str = "Book", **kwargs):
+        # **kwargs: Additional parameters depending on book type (e.g: audiobook, ebook)
+        clean_isbn = isbn.replace('-', '').replace(' ', '')
+        if len(clean_isbn) not in (10, 13):
+            print(f"Invalid ISBN: {isbn}. ISBN must be 10 or 13 characters.")
+            return False
+        
+        # Check if book is already in the library
+        if self.find_book(clean_isbn):
+            print(f"Book with ISBN {clean_isbn} already exists in the library.")
+            return False
+
+        book_data = self.fetch_book_from_api(clean_isbn)   
+        # If the book is not found or API request fails
+        if book_data is None:
+            print(f"Book with ISBN {clean_isbn} not found or could not be retrieved.")
+            return False
+        
+        # Create book object 
+        try:
+            if book_type.lower() == "ebook":
+                # eBook-specific attribute: file format
+                file_format = kwargs.get('file_format')
+                book = EBook(
+                    book_data['title'], 
+                    book_data['author'], 
+                    book_data['isbn'], 
+                    book_data['publication_year'], 
+                    file_format
+                )
+            elif book_type.lower() == "audiobook":
+                # audiobook-specific attribute: duration in minutes
+                duration_min = kwargs.get('duration_min')
+                book = AudioBook(
+                    book_data['title'], 
+                    book_data['author'], 
+                    book_data['isbn'], 
+                    book_data['publication_year'], 
+                    duration_min
+                )
+            else:
+                book = Book(
+                    book_data['title'], 
+                    book_data['author'], 
+                    book_data['isbn'], 
+                    book_data['publication_year']
+                )
+            
+            self._books.append(book)
+            self.save_books()
+            print(f"Book added successfully: {book}")
+            return True
+            
+        except Exception as e:
+            print(f"Error creating book object: {e}")
+            return False
+
     def add_book(self, book: Book):
+        # Old method from step 1
         self._books.append(book)
         self.save_books()
 
@@ -65,11 +166,14 @@ class Library:
     
     def find_book(self, isbn: str):
         for book in self._books:
-            if book.isbn == isbn:
+            if book.isbn.replace('-', '').replace(' ', '') == isbn:
                 return book
         return None
     
     def show_books(self):
+        if not self._books:
+            print("No books in the library.")
+            return
         for book in self._books:
             print(book)
 
@@ -78,9 +182,13 @@ class Library:
         return matches
 
     def show_books_by_type(self, book_type: str):
+        found_books = False
         for book in self._books:
             if book.book_type.lower() == book_type.lower():
                 print(book)
+                found_books = True
+        if not found_books:
+            print(f"No books of type '{book_type}' found in the library.")
         
     def load_books(self):
         try:
@@ -102,6 +210,7 @@ class Library:
                         self._books.append(Book(
                             item["title"], item["author"], item["isbn"], item["publication_year"]
                         ))
+
         except FileNotFoundError:
             self._books = [] # Initialize empty list
 
@@ -125,28 +234,29 @@ def main():
             print("Book type:\n1. Book\n2. EBook\n3. AudioBook")
             type_choice = input("Choice: ")
 
-            title = input("Title: ")
-            author = input("Author: ")
-            isbn = input("ISBN: ")
-            pub_year = int(input("Publication year: "))
-
+            isbn = input("Enter ISBN: ")
             # Add books according to their types 
             if type_choice == "2":  # EBook
                 file_format = input("File format (e.g., PDF, EPUB): ")
-                book = EBook(title, author, isbn, pub_year, file_format)
+                library.add_book_by_isbn(isbn, "ebook", file_format=file_format)
             elif type_choice == "3":  # AudioBook
-                duration_min = int(input("Duration (minutes): "))
-                book = AudioBook(title, author, isbn, pub_year, duration_min)
+                try:
+                    duration_min = int(input("Duration (minutes): "))
+                    library.add_book_by_isbn(isbn, "audiobook", duration_min=duration_min)
+                except ValueError:
+                    print("Invalid duration. Using default value.")
+                    library.add_book_by_isbn(isbn, "audiobook", duration_min=0)
             else:  # Normal Book
-                book = Book(title, author, isbn, pub_year)
-
-            library.add_book(book)
-            print("Book added.")
+                library.add_book_by_isbn(isbn)
 
         elif choice == "2":
             isbn = input("ISBN of the book being deleted: ")
-            library.remove_book(isbn)
-            print("Book deleted.")
+            book = library.find_book(isbn)
+            if book:
+                library.remove_book(isbn)
+                print("Book deleted.")
+            else:
+                print("Book not found.")
 
         elif choice == "3":
             library.show_books()
@@ -155,9 +265,9 @@ def main():
             isbn = input("ISBN of the book being searched: ")
             book = library.find_book(isbn)
             if book:
-                print(f"Found\n{book}")
+                print(f"Found:\n{book}")
             else:
-                print("Not found.")
+                print("Book not found.")
 
         elif choice == "5":
             author = input("Enter author name: ")
@@ -166,7 +276,7 @@ def main():
                 for book in books:
                     print(book)
             else:
-                print(f"Not found any book by {author}.")
+                print(f"No books found by {author}.")
 
         elif choice == "6":
             book_type = input("Enter a book type (book, ebook, audiobook): ")
@@ -176,7 +286,7 @@ def main():
             break
 
         else:
-            print("Invalid choice. Try again")
+            print("Invalid choice. Try again.")
 
 
 if __name__ == "__main__":
