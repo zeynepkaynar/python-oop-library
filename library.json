@@ -7,13 +7,6 @@
         "book_type": "Book"
     },
     {
-        "title": "How Book Reading Affects Student Performance?",
-        "author": "Tony Kaller",
-        "isbn": "9780545010221",
-        "publication_year": 2021,
-        "book_type": "Book"
-    },
-    {
         "title": "Harry Potter and the sorcerer's stone",
         "author": "J. K. Rowling",
         "isbn": "9780439708180",
@@ -42,13 +35,6 @@
         "book_type": "Book"
     },
     {
-        "title": "Crime and Punishment",
-        "author": "Фёдор Михайлович Достоевский",
-        "isbn": "9780486454115",
-        "publication_year": 2001,
-        "book_type": "Book"
-    },
-    {
         "title": "The Catcher in the Rye",
         "author": "J. D. Salinger",
         "isbn": "9780316769488",
@@ -65,25 +51,10 @@
         "duration_min": 485
     },
     {
-        "title": "Qamer Javed writes ",
-        "author": "Qamer javed",
-        "isbn": "1234567890",
-        "publication_year": 2023,
-        "book_type": "EBook",
-        "file_format": "EPUB"
-    },
-    {
         "title": "Harry Potter and the Chamber of Secrets",
         "author": "J. K. Rowling",
         "isbn": "9780439064873",
         "publication_year": 2000,
-        "book_type": "Book"
-    },
-    {
-        "title": "O Alquimista",
-        "author": "Paulo Coelho",
-        "isbn": "9780062315007",
-        "publication_year": 1988,
         "book_type": "Book"
     },
     {
@@ -117,13 +88,6 @@
         "duration_min": 500
     },
     {
-        "title": "The Test",
-        "author": "Katherine Applegate",
-        "isbn": "1111111111",
-        "publication_year": 2000,
-        "book_type": "Book"
-    },
-    {
         "title": "Little Fires Everywhere",
         "author": "Celeste Ng",
         "isbn": "9780735224292",
@@ -146,20 +110,6 @@
         "duration_min": 305
     },
     {
-        "title": "shure t1 bp transmitter w/tog battery, alkaline, 9v",
-        "author": "Robert L. Irvine Subhas K. Sikdar",
-        "isbn": "2222222222",
-        "publication_year": 1991,
-        "book_type": "Book"
-    },
-    {
-        "title": "Marathon",
-        "author": "Hal Higdon, Anita Zippin",
-        "isbn": "9999999999",
-        "publication_year": 1993,
-        "book_type": "Book"
-    },
-    {
         "title": "The Shining",
         "author": "Stephen King",
         "isbn": "9781444720723",
@@ -172,7 +122,34 @@
         "author": "Frank Herbert",
         "isbn": "9780441172719",
         "publication_year": 1965,
-        "book_type": "EBook",
-        "file_format": "EPUB"
+        "book_type": "Book"
+    },
+    {
+        "title": "Harry Potter and the Deathly Hallows",
+        "author": "J. K. Rowling",
+        "isbn": "9780545010221",
+        "publication_year": 2007,
+        "book_type": "Book"
+    },
+    {
+        "title": "Crime and punishment",
+        "author": "Фёдор Михайлович Достоевский",
+        "isbn": "9780486454115",
+        "publication_year": 1945,
+        "book_type": "Book"
+    },
+    {
+        "title": "O Alquimista",
+        "author": "Paulo Coelho",
+        "isbn": "9780062315007",
+        "publication_year": 1988,
+        "book_type": "Book"
+    },
+    {
+        "title": "The Lightning Thief",
+        "author": "Rick Riordan",
+        "isbn": "9780141346809",
+        "publication_year": 2005,
+        "book_type": "Book"
     }
 ]

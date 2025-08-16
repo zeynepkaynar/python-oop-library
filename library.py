@@ -39,7 +39,17 @@ class AudioBook(Book):
     def __str__(self):
         return f"{super().__str__()} [Duration: {self.duration_min} mins]"
 
+# Request ve Response modelleri
+class BookRequest(BaseModel):
+    isbn: str = Field(..., description="ISBN numarası")
 
+class BookResponse(BaseModel):
+    title: str
+    author: str
+    isbn: str
+    publication_year: int
+    book_type: str = "Book"
+    
 # Pydantic Model
 class BookModel(BaseModel):
     title: str
@@ -48,6 +58,9 @@ class BookModel(BaseModel):
     publication_year: int = Field(..., gt=1400)
     book_type: str = Field(default="Book")
 
+def normalize_isbn(isbn: str) -> str:
+    """Normalize ISBN by removing hyphens and spaces"""
+    return isbn.replace("-", "").replace(" ", "")
 
 # Represents a library class
 class Library:
@@ -63,7 +76,7 @@ class Library:
         OPEN_LIBRARY_URL = "https://openlibrary.org/search.json"
         try:
             # Clean isbn from spaces and hyphens
-            clean_isbn = isbn.replace('-', '').replace(' ', '')
+            clean_isbn = normalize_isbn(isbn)
             response = httpx.get(OPEN_LIBRARY_URL, params={"isbn": clean_isbn}, timeout=10.0)
             response.raise_for_status()
             data = response.json()
@@ -100,7 +113,7 @@ class Library:
 
     def add_book_by_isbn(self, isbn: str, book_type: str = "Book", **kwargs):
         # **kwargs: Additional parameters depending on book type (e.g: audiobook, ebook)
-        clean_isbn = isbn.replace('-', '').replace(' ', '')
+        clean_isbn = normalize_isbn(isbn)
         if len(clean_isbn) not in (10, 13):
             print(f"Invalid ISBN: {isbn}. ISBN must be 10 or 13 characters.")
             return False
@@ -161,12 +174,14 @@ class Library:
         self.save_books()
 
     def remove_book(self, isbn: str):
-        self._books = [book for book in self._books if book.isbn != isbn]
+        clean_isbn = normalize_isbn(isbn)
+        self._books = [book for book in self._books if normalize_isbn(book.isbn) != clean_isbn]
         self.save_books()
     
     def find_book(self, isbn: str):
+        clean_isbn = normalize_isbn(isbn)
         for book in self._books:
-            if book.isbn.replace('-', '').replace(' ', '') == isbn:
+            if normalize_isbn(book.isbn) == clean_isbn:
                 return book
         return None
     

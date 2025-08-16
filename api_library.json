@@ -1,0 +1,16 @@
+[
+    {
+        "title": "Effective Java",
+        "author": "Joshua Bloch",
+        "isbn": "9780134685991",
+        "publication_year": 2001,
+        "book_type": "Book"
+    },
+    {
+        "title": "Rómulo Maccio",
+        "author": "Rómulo Macció",
+        "isbn": "9999999999999",
+        "publication_year": 2001,
+        "book_type": "Book"
+    }
+]
