@@ -1,155 +1,61 @@
 [
     {
-        "title": "Fantastic Mr. Fox",
-        "author": "Roald Dahl",
-        "isbn": "9780140328721",
-        "publication_year": 1988,
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "isbn": "9780141182636",
+        "publication_year": 1920,
         "book_type": "Book"
     },
     {
-        "title": "Harry Potter and the sorcerer's stone",
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "isbn": "9780345339683",
+        "publication_year": 1937,
+        "book_type": "Book"
+    },
+    {
+        "title": "Harry Potter and the Philosopher's Stone",
         "author": "J. K. Rowling",
         "isbn": "9780439708180",
-        "publication_year": 1999,
+        "publication_year": 1997,
+        "book_type": "Book"
+    },
+    {
+        "title": "The Catcher in the Rye",
+        "author": "J. D. Salinger",
+        "isbn": "9780316769174",
+        "publication_year": 1945,
         "book_type": "Book"
     },
     {
         "title": "Pride and Prejudice",
         "author": "Jane Austen",
         "isbn": "9780141439518",
-        "publication_year": 2003,
+        "publication_year": 1813,
         "book_type": "Book"
     },
     {
-        "title": "The Great Gatsby",
-        "author": "F. Scott Fitzgerald",
-        "isbn": "9780141182636",
-        "publication_year": 2000,
-        "book_type": "Book"
-    },
-    {
-        "title": "To Kill a Mockingbird",
-        "author": "Harper Lee",
-        "isbn": "9780060935467",
-        "publication_year": 2016,
-        "book_type": "Book"
-    },
-    {
-        "title": "The Catcher in the Rye",
-        "author": "J. D. Salinger",
-        "isbn": "9780316769488",
-        "publication_year": 1991,
+        "title": "Ulysses",
+        "author": "James Joyce",
+        "isbn": "9780199535675",
+        "publication_year": 1920,
         "book_type": "EBook",
         "file_format": "PDF"
     },
     {
-        "title": "Harry Potter and the prisoner of Azkaban",
-        "author": "J. K. Rowling",
-        "isbn": "9780439136365",
-        "publication_year": 1999,
-        "book_type": "AudioBook",
-        "duration_min": 485
-    },
-    {
-        "title": "Harry Potter and the Chamber of Secrets",
-        "author": "J. K. Rowling",
-        "isbn": "9780439064873",
-        "publication_year": 2000,
-        "book_type": "Book"
-    },
-    {
-        "title": "Inferno",
-        "author": "Dan Brown",
-        "isbn": "9780385537858",
-        "publication_year": 1962,
-        "book_type": "Book"
-    },
-    {
-        "title": "Atomic Habits",
-        "author": "James Clear",
-        "isbn": "9780735211292",
-        "publication_year": 2016,
-        "book_type": "Book"
-    },
-    {
-        "title": "The Midnight Library",
-        "author": "Matt Haig",
-        "isbn": "9780525559474",
-        "publication_year": 2020,
+        "title": "Emma",
+        "author": "Jane Austen",
+        "isbn": "9780141439587",
+        "publication_year": 1815,
         "book_type": "EBook",
         "file_format": "EPUB"
     },
     {
-        "title": "Why We Sleep",
-        "author": "Matthew P. Walker",
-        "isbn": "9781501144318",
-        "publication_year": 2017,
+        "title": "A Game of Thrones",
+        "author": "George R. R. Martin",
+        "isbn": "9780553103540",
+        "publication_year": 1996,
         "book_type": "AudioBook",
-        "duration_min": 500
-    },
-    {
-        "title": "Little Fires Everywhere",
-        "author": "Celeste Ng",
-        "isbn": "9780735224292",
-        "publication_year": 2014,
-        "book_type": "Book"
-    },
-    {
-        "title": "Transcendent Kingdom",
-        "author": "Yaa Gyasi",
-        "isbn": "9780525658184",
-        "publication_year": 2020,
-        "book_type": "Book"
-    },
-    {
-        "title": "Origin",
-        "author": "Dan Brown",
-        "isbn": "9780525434290",
-        "publication_year": 2013,
-        "book_type": "AudioBook",
-        "duration_min": 305
-    },
-    {
-        "title": "The Shining",
-        "author": "Stephen King",
-        "isbn": "9781444720723",
-        "publication_year": 1977,
-        "book_type": "AudioBook",
-        "duration_min": 258
-    },
-    {
-        "title": "Dune",
-        "author": "Frank Herbert",
-        "isbn": "9780441172719",
-        "publication_year": 1965,
-        "book_type": "Book"
-    },
-    {
-        "title": "Harry Potter and the Deathly Hallows",
-        "author": "J. K. Rowling",
-        "isbn": "9780545010221",
-        "publication_year": 2007,
-        "book_type": "Book"
-    },
-    {
-        "title": "Crime and punishment",
-        "author": "Фёдор Михайлович Достоевский",
-        "isbn": "9780486454115",
-        "publication_year": 1945,
-        "book_type": "Book"
-    },
-    {
-        "title": "O Alquimista",
-        "author": "Paulo Coelho",
-        "isbn": "9780062315007",
-        "publication_year": 1988,
-        "book_type": "Book"
-    },
-    {
-        "title": "The Lightning Thief",
-        "author": "Rick Riordan",
-        "isbn": "9780141346809",
-        "publication_year": 2005,
-        "book_type": "Book"
+        "duration_min": 438
     }
 ]

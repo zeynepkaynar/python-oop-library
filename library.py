@@ -1,3 +1,4 @@
+from enum import IntEnum
 from pydantic import BaseModel, Field
 import httpx
 import json
@@ -39,9 +40,10 @@ class AudioBook(Book):
     def __str__(self):
         return f"{super().__str__()} [Duration: {self.duration_min} mins]"
 
-# Request ve Response modelleri
+# Request and Response Models 
 class BookRequest(BaseModel):
-    isbn: str = Field(..., description="ISBN numarası")
+    isbn: str = Field(..., description="ISBN number (must be 10 or 13 characters):",
+                min_length=10, max_length=13)
 
 class BookResponse(BaseModel):
     title: str
@@ -58,8 +60,19 @@ class BookModel(BaseModel):
     publication_year: int = Field(..., gt=1400)
     book_type: str = Field(default="Book")
 
+# HTTP Status Codes
+class HTTPStatusCodes(IntEnum):
+    OK = 200
+    CREATED = 201
+    NO_CONTENT = 204
+    BAD_REQUEST = 400
+    UNAUTHORIZED = 401
+    FORBIDDEN = 403
+    NOT_FOUND = 404
+    UNPROCESSABLE_ENTITY = 422
+
 def normalize_isbn(isbn: str) -> str:
-    """Normalize ISBN by removing hyphens and spaces"""
+    # Helper function to clean ISBN from spaces and hyphens
     return isbn.replace("-", "").replace(" ", "")
 
 # Represents a library class
@@ -75,7 +88,6 @@ class Library:
 
         OPEN_LIBRARY_URL = "https://openlibrary.org/search.json"
         try:
-            # Clean isbn from spaces and hyphens
             clean_isbn = normalize_isbn(isbn)
             response = httpx.get(OPEN_LIBRARY_URL, params={"isbn": clean_isbn}, timeout=10.0)
             response.raise_for_status()
@@ -124,7 +136,7 @@ class Library:
             return False
 
         book_data = self.fetch_book_from_api(clean_isbn)   
-        # If the book is not found or API request fails
+        # If the book is not found or API request fails, print the message and return False
         if book_data is None:
             print(f"Book with ISBN {clean_isbn} not found or could not be retrieved.")
             return False
@@ -174,18 +186,22 @@ class Library:
         self.save_books()
 
     def remove_book(self, isbn: str):
+        # Remove a book by ISBN
         clean_isbn = normalize_isbn(isbn)
         self._books = [book for book in self._books if normalize_isbn(book.isbn) != clean_isbn]
         self.save_books()
     
     def find_book(self, isbn: str):
+        # Find a book by ISBN
         clean_isbn = normalize_isbn(isbn)
         for book in self._books:
             if normalize_isbn(book.isbn) == clean_isbn:
                 return book
+        # If no match is found, return None
         return None
     
     def show_books(self):
+        # List books if exist
         if not self._books:
             print("No books in the library.")
             return
@@ -193,10 +209,12 @@ class Library:
             print(book)
 
     def list_author_books(self, author: str):
+        # List books by author name
         matches = [book for book in self._books if book.author.lower() == author.lower()]
         return matches
 
     def show_books_by_type(self, book_type: str):
+        # List books of a kind
         found_books = False
         for book in self._books:
             if book.book_type.lower() == book_type.lower():
@@ -207,10 +225,12 @@ class Library:
         
     def load_books(self):
         try:
+            # Open the JSON file
             with open(self.lib_name, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 self._books = []
                 for item in data:
+                    # Check book type and create the according object
                     if item.get("book_type") == "EBook":
                         self._books.append(EBook(
                             item["title"], item["author"], item["isbn"],
@@ -227,16 +247,19 @@ class Library:
                         ))
 
         except FileNotFoundError:
-            self._books = [] # Initialize empty list
+            # If file does not exist, initialize empty list
+            self._books = [] # 
 
     def save_books(self):
+        # Save all books to the JSON file
         with open(self.lib_name, 'w', encoding='utf-8') as f:
-            # Transform book objects to dictionaries and save
+            # Transform book objects to dictionaries
             json.dump([book.__dict__ for book in self._books], f, indent=4, ensure_ascii=False)
 
 
 # Main menu 
 def main():
+    # Create Library object
     library = Library("library.json")
 
     while True:
@@ -259,7 +282,7 @@ def main():
                     duration_min = int(input("Duration (minutes): "))
                     library.add_book_by_isbn(isbn, "audiobook", duration_min=duration_min)
                 except ValueError:
-                    print("Invalid duration. Using default value.")
+                    print("Invalid duration.")
                     library.add_book_by_isbn(isbn, "audiobook", duration_min=0)
             else:  # Normal Book
                 library.add_book_by_isbn(isbn)
@@ -302,7 +325,6 @@ def main():
 
         else:
             print("Invalid choice. Try again.")
-
 
 if __name__ == "__main__":
     main()

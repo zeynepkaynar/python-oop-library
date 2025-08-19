@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from typing import List
-from library import Library, BookModel, BookRequest, BookResponse
+from library import Library, BookRequest, BookResponse, normalize_isbn
 
 # Create FastAPI application
 app = FastAPI(
-    title="Library API ",
+    title="Library API",
     description="API for library management",
     version="1.0.0"
 )
@@ -13,14 +13,15 @@ app = FastAPI(
 library = Library("library.json")
 
 @app.get("/")
+# Root endpoind prints a welcome message to confirm API is running
 async def root():
     return {"message": "Welcome to the library API!"}
 
 @app.get("/books", response_model=List[BookResponse])
 async def get_books():
-    #Lists all book from library
+    # Lists all book from library
     books = []
-    # Convert Book objects to BookResponse model
+    # Convert Book objects in library to BookResponse model for API response
     for book in library._books:
         books.append(BookResponse(
             title=book.title,
@@ -34,8 +35,16 @@ async def get_books():
 @app.post("/books", response_model=BookResponse)
 async def add_book(book_request: BookRequest):
     # Add book by ISBN
+
+    clean_isbn = normalize_isbn(book_request.isbn)
+    if len(clean_isbn) not in (10, 13):
+        raise HTTPException(
+            status_code=422,
+            detail="ISBN must be either 10 or 13 characters long."
+        )
+    
     # Check if book is already in the library
-    existing_book = library.find_book(book_request.isbn.replace('-', '').replace(' ', ''))
+    existing_book = library.find_book(clean_isbn)
     if existing_book:
         raise HTTPException(
             status_code=400, 
@@ -50,8 +59,8 @@ async def add_book(book_request: BookRequest):
             detail="Book with ISBN not found or could not be retrieved."
         )
     
-    # Find the book that is added and add to library
-    added_book = library.find_book(book_request.isbn.replace('-', '').replace(' ', ''))
+    # Find the book that is added and return it
+    added_book = library.find_book(clean_isbn)
     return BookResponse(
         title=added_book.title,
         author=added_book.author,
@@ -64,7 +73,7 @@ async def add_book(book_request: BookRequest):
 async def delete_book(isbn: str):
     # Delete a book by ISBN
 
-    clean_isbn = isbn.replace('-', '').replace(' ', '')
+    clean_isbn = normalize_isbn(isbn)
 
     # Check if the book exists
     book = library.find_book(clean_isbn)
@@ -80,12 +89,15 @@ async def delete_book(isbn: str):
 
 @app.get("/books/{isbn}", response_model=BookResponse)
 async def get_book(isbn: str):
-    """ISBN ile belirli bir kitabı getir"""
-    book = library.find_book(isbn.replace('-', '').replace(' ', ''))
+    # Get a specific book by ISBN
+    clean_isbn =  normalize_isbn(isbn)
+
+    # Find the book
+    book = library.find_book(clean_isbn)
     if not book:
         raise HTTPException(
             status_code=404, 
-            detail=f"ISBN {isbn} ile kitap bulunamadı"
+            detail=f"Book with ISBN {clean_isbn} not found"
         )
     
     # Return book information
