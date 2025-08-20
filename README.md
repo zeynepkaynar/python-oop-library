@@ -32,3 +32,5 @@ Content-Type: application/json </br>
 } </br> </br>
 - GET /books/{isbn}: Returns a specific book by ISBN </br>
 - DELETE /books/{isbn}: Removes the book with the given ISBN </br>
+### Testing
+test_library.py file contains unit and integration tests that verify the functionality of the library system. To run the tests: `python -m pytest`
